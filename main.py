@@ -24,19 +24,19 @@ def select_roi(event, x, y, flags, param):
 
         roi = (min(x0, x1), min(y0, y1), abs(x1 - x0), abs(y1 - y0))
 
-        print(f"✅ Выбрана область: {roi}")
+        print(f"✅ The area is selected: {roi}")
 
 
 def find_image(template_path, screenshot, threshold=0.5):
     template = cv2.imread(template_path, cv2.IMREAD_COLOR)
     if template is None:
-        print(f"ОШИБКА: Не удалось загрузить шаблон: {template_path}")
+        print(f"ERROR: Failed to load template: {template_path}")
         return None
 
     h, w = template.shape[:2]
 
     if screenshot.shape[0] < h or screenshot.shape[1] < w:
-        print("ОШИБКА: Скриншот меньше шаблона.")
+        print("ERROR: Screenshot is smaller than template")
         return None
 
     result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
@@ -63,7 +63,7 @@ def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
 
     template_img = cv2.imread(template_path, cv2.IMREAD_COLOR)
     if template_img is None:
-        print(f"КРИТИЧЕСКАЯ ОШИБКА: Не могу загрузить {template_path}. Выход.")
+        print(f"CRITICAL ERROR: Unable to load {template_path}. Exit.")
         return
     template_h, template_w = template_img.shape[:2]
 
@@ -89,10 +89,10 @@ def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
                 y = ry + cy
                 prev_frame_gray = None
                 stabilize_timer = time.time()
-                print(f"✅ Поплавок найден: {x},{y},{w},{h} — жду стабилизации...")
+                print(f"✅ The float was found: {x},{y},{w},{h} - waiting for stabilization...")
             else:
                 fail_count += 1
-                print(f"🔍 Ищу поплавок... (попытка {fail_count})")
+                print(f"🔍 Looking for a float... (attempt {fail_count})")
                 if fail_count >= 5:
                     fail_count = 0
 
@@ -103,7 +103,7 @@ def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
                         h_scr, w_scr = screenshot_full.shape[:2]
                         click_x, click_y = w_scr // 2, h_scr // 2
                     pyautogui.click(click_x, click_y)
-                    print(f"🖱️ Повторный клик в точке ({click_x}, {click_y}) из-за 5 неудач")
+                    print(f"🖱️ Repeated click at point ({click_x}, {click_y}) due to 5 failures")
                 time.sleep(0.5)
                 continue
 
@@ -119,7 +119,7 @@ def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
             splash_roi_bgr = screenshot_full[roi_y1:roi_y2, roi_x1:roi_x2]
             current_frame_gray = cv2.cvtColor(splash_roi_bgr, cv2.COLOR_BGR2GRAY)
         except cv2.error:
-            print("⚠️ Ошибка вырезания области, поплавок у края экрана? Ищу заново...")
+            print("⚠️ Clipping error, float at the edge of the screen? Trying again...")
             x = y = w = h = None
             stabilize_timer = None
             prev_frame_gray = None
@@ -156,7 +156,7 @@ def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
 
 
             if changed_pixels > SPLASH_PIXEL_THRESHOLD:
-                print(f"🎣 ПОКЛЁВКА! (Всплеск: {changed_pixels} пикселей)")
+                print(f"🎣 BITTLE! (Splash: {changed_pixels} pixels)")
 
                 time.sleep(1)
 
@@ -170,7 +170,7 @@ def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
                     click_y = y + h // 2 - int(h * click_offset_ratio)
 
                 pyautogui.click(click_x, click_y)
-                print(f"🖱️ Клик в точке ({click_x}, {click_y})")
+                print(f"🖱️ Click on the point ({click_x}, {click_y})")
                 time.sleep(1)
                 pyautogui.click(click_x, click_y)
 
@@ -178,7 +178,7 @@ def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
                 x = y = w = h = None
                 stabilize_timer = None
                 prev_frame_gray = None
-                print("--- Сброс, ищу новый поплавок ---")
+                print("--- Reset, looking for a new float ---")
                 time.sleep(2)
                 continue
 
@@ -195,22 +195,22 @@ if __name__ == "__main__":
     height, width = screenshot.shape[:2]
     small = cv2.resize(screenshot, (int(width * scale), int(height * scale)))
 
-    cv2.namedWindow("Выберите область")
-    cv2.setMouseCallback("Выберите область", select_roi)
+    cv2.namedWindow("Select an area")
+    cv2.setMouseCallback("Select an area", select_roi)
 
     while True:
         temp = small.copy()
         if selecting:
             cv2.rectangle(temp, (int(x0 * scale), int(y0 * scale)), (int(x1 * scale), int(y1 * scale)), (0, 0, 255), 2)
-        cv2.imshow("Выберите область", temp)
+        cv2.imshow("Select an area", temp)
         key = cv2.waitKey(1) & 0xFF
         if roi is not None and not selecting:
             break
         if key == 27:
-            print("Выбор отменен.")
+            print("Selection cancelled.")
             exit()
 
     cv2.destroyAllWindows()
-    print("Запуск отслеживания...")
+    print("Starting tracking...")
 
     track_poplavok("poplavok.png", click_offset_ratio=0)
