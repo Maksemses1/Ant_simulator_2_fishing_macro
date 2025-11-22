@@ -4,7 +4,7 @@ A **lightweight and customizable automated fishing bot** written in Python. The 
 
 > **💾 Download Executable**
 > You can download the compiled `.exe` version of this macro here:  
-> [Google Drive](https://drive.google.com/drive/folders/1aUl9aK7EBgviW1OmlUNMsSpTBK_7TMVl?usp=drive_link) or in **release page in this github repository**
+> [Google Drive](https://drive.google.com/drive/folders/1aUl9aK7EBgviW1OmlUNMsSpTBK_7TMVl?usp=drive_link) or in **[Releases](https://github.com/Maksemses1/Ant-simulator-2-fishing-macro/releases/tag/release) page in this github repository**
 
 ## ✨ Features
 
