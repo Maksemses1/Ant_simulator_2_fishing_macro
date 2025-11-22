@@ -21,7 +21,9 @@ def select_roi(event, x, y, flags, param):
     elif event == cv2.EVENT_LBUTTONUP:
         x1, y1 = x_real, y_real
         selecting = False
-        roi = (min(x0, x1), min(y0, y1), abs(x1 - 0), abs(y1 - 0))
+
+        roi = (min(x0, x1), min(y0, y1), abs(x1 - x0), abs(y1 - y0))
+
         print(f"✅ Выбрана область: {roi}")
 
 
@@ -46,12 +48,12 @@ def find_image(template_path, screenshot, threshold=0.5):
     return None
 
 
-def track_poplavok(template_path, threshold=0.6, click_offset_ratio=0.2):
+def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
     global roi
 
     SPLASH_PADDING = 100
     SPLASH_CHANGE_THRESHOLD = 10
-    SPLASH_PIXEL_THRESHOLD = 30
+    SPLASH_PIXEL_THRESHOLD = 280
 
 
     prev_frame_gray = None
@@ -156,6 +158,7 @@ def track_poplavok(template_path, threshold=0.6, click_offset_ratio=0.2):
             if changed_pixels > SPLASH_PIXEL_THRESHOLD:
                 print(f"🎣 ПОКЛЁВКА! (Всплеск: {changed_pixels} пикселей)")
 
+                time.sleep(1)
 
                 if roi is not None:
 
