@@ -1,76 +1,76 @@
-exe файл этого макроса [Google Disk](https://drive.google.com/drive/folders/1aUl9aK7EBgviW1OmlUNMsSpTBK_7TMVl?usp=drive_link)
-
 # 🎣 OpenCV Fishing Bot
 
-**Легкий и настраиваемый бот для автоматической рыбалки**, написанный на Python. Скрипт использует компьютерное зрение (OpenCV) для поиска поплавка на экране и отслеживания поклевки по изменению пикселей (всплеску воды).
+A **lightweight and customizable automated fishing bot** written in Python. The script utilizes Computer Vision (OpenCV) to locate the fishing float on the screen and track bites by analyzing pixel changes (water splashes).
 
-![Python](https://img.shields.io/badge/Python-3.x-blue?style=flat&logo=python)
-![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-green?style=flat&logo=opencv)
+> **💾 Download Executable**
+> You can download the compiled `.exe` version of this macro here:  
+> [Google Drive](https://drive.google.com/drive/folders/1aUl9aK7EBgviW1OmlUNMsSpTBK_7TMVl?usp=drive_link) or in **release page in this github repository**
 
-## ✨ Возможности
+## ✨ Features
 
-* **🎯 Выбор зоны (ROI):** В начале работы вы вручную выделяете область рыбалки, что исключает ложные срабатывания интерфейса.
-* **🖼️ Поиск по шаблону:** Находит поплавок, используя ваше изображение-шаблон (`poplavok.png`).
-* **🌊 Детекция поклевки:** Анализирует разницу кадров. Если количество изменившихся пикселей превышает порог (всплеск) — бот подсекает.
-* **⏳ Стабилизация:** Игнорирует колебания воды сразу после заброса.
-* **🔄 Авто-перезаброс:** Если поплавок потерян или долго не клюет, бот перезакидывает удочку.
+  * **🎯 ROI Selection:** Manually select the fishing zone at startup to eliminate false positives from the UI.
+  * **🖼️ Template Matching:** Locates the float using your custom template image (`poplavok.png`).
+  * **🌊 Bite Detection:** Analyzes frame differences. If the number of changed pixels exceeds the threshold (splash), the bot hooks the fish.
+  * **⏳ Stabilization:** Ignores water ripples immediately after casting.
+  * **🔄 Auto-Recast:** Automatically recasts if the float is lost or if there is no bite for a specified time.
 
-## 🛠️ Требования
+## 🛠️ Requirements
 
-Для работы скрипта необходим **Python 3** и следующие библиотеки:
+To run the script, you need **Python 3** and the following libraries:
 
-* `opencv-python` (cv2)
-* `pyautogui`
-* `numpy`
+  * `opencv-python` (cv2)
+  * `pyautogui`
+  * `numpy`
 
-## 🚀 Установка и Запуск
+## 🚀 Installation & Setup
 
-### 1. Клонирование и установка библиотек
-Скачайте проект и установите зависимости:
+### 1\. Clone and Install Dependencies
+
+Download the project and install the required libraries:
 
 ```bash
 pip install opencv-python pyautogui numpy
-````
+```
 
-### 2\. Подготовка шаблона (Важно\!)
+### 2\. Prepare the Template (Important\!)
 
-Скрипту нужно знать, как выглядит ваш поплавок.
+The script needs to know what your float looks like.
 
-1.  Сделайте скриншот игры.
-2.  Вырежьте в любом редакторе **только поплавок** (желательно с минимумом воды вокруг).
-3.  Сохраните изображение под именем `poplavok.png` в папку со скриптом.
-4.  **Важно:** Масштаб игры при создании скриншота и при запуске бота должен совпадать.
+1.  Take a screenshot of the game.
+2.  Crop **only the float** using any image editor (try to keep the surrounding water to a minimum).
+3.  Save the image as `poplavok.png` in the script's folder.
+4.  **Important:** The game scale/resolution when taking the screenshot must match the scale when running the bot.
 
-### 3\. Запуск
+### 3\. Run
 
-Запустите скрипт:
+Execute the script:
 
 ```bash
 python main.py
 ```
 
-## 🎮 Как пользоваться
+## 🎮 How to Use
 
-1.  После запуска откроется окно с трансляцией вашего экрана (в уменьшенном масштабе).
-2.  **Выделите мышкой прямоугольную область**, где будет происходить рыбалка (вода + поплавок).
-3.  Отпустите кнопку мыши — скрипт запомнит область.
-4.  Бот начнет работу:
-      * Найден поплавок -\> Ждет стабилизации -\> Ждет всплеска -\> Кликает (подсекает).
+1.  Upon launching, a window showing a stream of your screen (scaled down) will appear.
+2.  **Draw a rectangular box** with your mouse to define the fishing area (water + float).
+3.  Release the mouse button — the script will lock onto this area.
+4.  The bot will start working:
+      * Finds float -\> Waits for stabilization -\> Waits for splash -\> Clicks (hooks).
 
-## ⚙️ Настройка (Конфигурация)
+## ⚙️ Configuration
 
-В начале файла `main.py` (или функции `track_poplavok`) есть переменные, которые можно настроить под конкретную игру:
+You can adjust variables at the beginning of `main.py` (or inside the `track_poplavok` function) to fit your specific game:
 
-| Переменная | Значение | Описание |
+| Variable | Value | Description |
 | :--- | :--- | :--- |
-| `STABILIZE_TIME` | `1` | Время (сек) игнорирования движений после нахождения поплавка (чтобы круги от заброса исчезли). |
-| `threshold` | `0.6` | Точность поиска картинки (0.1 - 1.0). Если не находит поплавок — уменьшите до `0.4`. |
-| `SPLASH_PIXEL_THRESHOLD` | `30` | Сколько пикселей должно измениться, чтобы считать это поклевкой. Меньше = чувствительнее. |
-| `SPLASH_CHANGE_THRESHOLD` | `10` | Насколько сильно должен измениться цвет пикселя, чтобы это считалось движением. |
-| `click_offset_ratio` | `0.2` | Смещение клика от центра поплавка (иногда нужно кликать чуть ниже/выше). |
+| `STABILIZE_TIME` | `1` | Time (in sec) to ignore movement after finding the float (allows ripples from casting to settle). |
+| `threshold` | `0.6` | Image matching accuracy (0.1 - 1.0). If it fails to find the float, decrease to `0.4`. |
+| `SPLASH_PIXEL_THRESHOLD` | `30` | How many pixels need to change to register as a bite. Lower = more sensitive. |
+| `SPLASH_CHANGE_THRESHOLD` | `10` | How drastically a pixel's color must change to be considered movement. |
+| `click_offset_ratio` | `0.2` | Click offset from the center of the float (useful if you need to click slightly above/below). |
 
-## ⚠️ Решение проблем
+## ⚠️ Troubleshooting
 
-  * **Бот пишет "ОШИБКА: Скриншот меньше шаблона"**: Скорее всего, вы сохранили `poplavok.png` в слишком большом разрешении или на другом мониторе.
-  * **Поплавок находится, но бот сразу кликает**: Увеличьте `STABILIZE_TIME` или `SPLASH_PIXEL_THRESHOLD`. Возможно, в воде слишком много ряби.
-  * **Поплавок не находится**: Уменьшите `threshold` (например, до `0.4`) или сделайте новый, более качественный скриншот `poplavok.png`.
+  * **"ERROR: Screenshot smaller than template"**: You likely saved `poplavok.png` in a resolution that is too high or captured it on a different monitor.
+  * **Float found, but bot clicks immediately**: Increase `STABILIZE_TIME` or `SPLASH_PIXEL_THRESHOLD`. There might be too much background movement/ripples in the water.
+  * **Float is not found**: Decrease `threshold` (e.g., to `0.4`) or create a new, clearer screenshot for `poplavok.png`.
