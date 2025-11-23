@@ -1,3 +1,5 @@
+**YOU NEED TO CHANGE GRAPHIC TO 1**
+
 # 🎣 OpenCV Fishing Bot
 
 A **lightweight and customizable automated fishing bot** written in Python. The script utilizes Computer Vision (OpenCV) to locate the fishing float on the screen and track bites by analyzing pixel changes (water splashes).
