@@ -53,7 +53,7 @@ def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
 
     SPLASH_PADDING = 100
     SPLASH_CHANGE_THRESHOLD = 10
-    SPLASH_PIXEL_THRESHOLD = 280
+    SPLASH_PIXEL_THRESHOLD = 500
 
 
     prev_frame_gray = None
