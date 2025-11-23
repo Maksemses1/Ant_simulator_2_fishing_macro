@@ -82,6 +82,7 @@ def track_poplavok(template_path, threshold=0.5, click_offset_ratio=0.2):
 
         if x is None or y is None:
             coords = find_image(template_path, search_area, threshold)
+            fail_count = 0
             if coords:
                 cx, cy, w, h = coords
 
